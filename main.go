@@ -5,7 +5,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -22,14 +21,10 @@ import (
 var nc *nats.Conn
 var natsErr error
 
-func processEvent(data []byte) (*Event, error) {
-	var ev Event
-	err := json.Unmarshal(data, &ev)
-	return &ev, err
-}
-
 func eventHandler(m *nats.Msg) {
-	f, err := processEvent(m.Data)
+	var f Event
+
+	err := f.Process(m.Data)
 	if err != nil {
 		nc.Publish("firewall.delete.aws.error", m.Data)
 		return
@@ -40,7 +35,7 @@ func eventHandler(m *nats.Msg) {
 		return
 	}
 
-	err = deleteFirewall(f)
+	err = deleteFirewall(&f)
 	if err != nil {
 		f.Error(err)
 		return
