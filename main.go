@@ -35,7 +35,7 @@ func eventHandler(m *nats.Msg) {
 		return
 	}
 
-	if f.Valid() == false {
+	if err = f.Validate(); err != nil {
 		f.Error(errors.New("Security Group is invalid"))
 		return
 	}
