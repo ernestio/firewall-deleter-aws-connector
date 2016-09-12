@@ -67,44 +67,6 @@ func (ev *Event) Validate() error {
 		return ErrSGAWSIDInvalid
 	}
 
-	if ev.SecurityGroupName == "" {
-		return ErrSGNameInvalid
-	}
-
-	if len(ev.SecurityGroupRules.Egress) < 1 && len(ev.SecurityGroupRules.Egress) < 1 {
-		return ErrSGRulesInvalid
-	}
-
-	for _, rule := range ev.SecurityGroupRules.Ingress {
-		if rule.IP == "" {
-			return ErrSGRuleIPInvalid
-		}
-		if rule.Protocol == "" {
-			return ErrSGRuleProtocolInvalid
-		}
-		if rule.FromPort < 1 || rule.FromPort > 65535 {
-			return ErrSGRuleFromPortInvalid
-		}
-		if rule.ToPort < 1 || rule.ToPort > 65535 {
-			return ErrSGRuleToPortInvalid
-		}
-	}
-
-	for _, rule := range ev.SecurityGroupRules.Egress {
-		if rule.IP == "" {
-			return ErrSGRuleIPInvalid
-		}
-		if rule.Protocol == "" {
-			return ErrSGRuleProtocolInvalid
-		}
-		if rule.FromPort < 1 || rule.FromPort > 65535 {
-			return ErrSGRuleFromPortInvalid
-		}
-		if rule.ToPort < 1 || rule.ToPort > 65535 {
-			return ErrSGRuleToPortInvalid
-		}
-	}
-
 	return nil
 }
 

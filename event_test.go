@@ -223,9 +223,9 @@ func TestEvent(t *testing.T) {
 			})
 		})
 
-		Convey("With no security group name", func() {
+		Convey("With no security group id", func() {
 			testEventInvalid := testEvent
-			testEventInvalid.SecurityGroupName = ""
+			testEventInvalid.SecurityGroupAWSID = ""
 			invalid, _ := json.Marshal(testEventInvalid)
 
 			Convey("When validating the event", func() {
@@ -234,163 +234,9 @@ func TestEvent(t *testing.T) {
 				err := e.Validate()
 				Convey("It should error", func() {
 					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group name invalid")
+					So(err.Error(), ShouldEqual, "Security Group aws id invalid")
 				})
 			})
 		})
-
-		Convey("With an empty ruleset", func() {
-			testEventInvalid := testEvent
-			testEventInvalid.SecurityGroupRules.Ingress = []rule{}
-			testEventInvalid.SecurityGroupRules.Egress = []rule{}
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group must contain rules")
-				})
-			})
-		})
-
-		Convey("With an invalid ingress rule ip", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Ingress[0].IP = ""
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule ip invalid")
-				})
-			})
-		})
-
-		Convey("With an invalid ingress rule from port", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Ingress[0].FromPort = 999999
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule from port invalid")
-				})
-			})
-		})
-
-		Convey("With an invalid ingress rule to port", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Ingress[0].ToPort = -99999
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule to port invalid")
-				})
-			})
-		})
-
-		Convey("With an invalid ingress rule protocol", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Ingress[0].Protocol = ""
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule protocol invalid")
-				})
-			})
-		})
-
-		Convey("With an invalid egress rule ip", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Egress[0].IP = ""
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule ip invalid")
-				})
-			})
-		})
-
-		Convey("With an invalid egress rule from port", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Egress[0].FromPort = 999999
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule from port invalid")
-				})
-			})
-		})
-
-		Convey("With an invalid egress rule to port", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Egress[0].ToPort = -99999
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule to port invalid")
-				})
-			})
-		})
-
-		Convey("With an invalid egress rule protocol", func() {
-			testEventInvalid := testEvent
-			buildTestRules(&testEventInvalid)
-			testEventInvalid.SecurityGroupRules.Egress[0].Protocol = ""
-			invalid, _ := json.Marshal(testEventInvalid)
-
-			Convey("When validating the event", func() {
-				var e Event
-				e.Process(invalid)
-				err := e.Validate()
-				Convey("It should error", func() {
-					So(err, ShouldNotBeNil)
-					So(err.Error(), ShouldEqual, "Security Group rule protocol invalid")
-				})
-			})
-		})
-
 	})
 }
