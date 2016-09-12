@@ -5,7 +5,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"runtime"
@@ -30,7 +29,7 @@ func eventHandler(m *nats.Msg) {
 	}
 
 	if err = f.Validate(); err != nil {
-		f.Error(errors.New("Security Group is invalid"))
+		f.Error(err)
 		return
 	}
 
